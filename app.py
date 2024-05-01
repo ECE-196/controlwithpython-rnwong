@@ -1,10 +1,10 @@
-from __future__ import annotations
 from threading import Thread, Lock
 from serial import Serial, SerialException
 from serial.tools.list_ports import comports
 
 import tkinter as tk
 import tkinter.ttk as ttk
+
 from tkinter.messagebox import showerror
 
 S_OK: int = 0xaa
@@ -16,6 +16,7 @@ def detached_callback(f):
 class LockedSerial(Serial):
     _lock: Lock = Lock()
     
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
@@ -30,6 +31,7 @@ class LockedSerial(Serial):
     def close(self):
         with self._lock:
             super().close()
+
 
 class SerialPortal(tk.Toplevel):
     def __init__(self, parent: App):
@@ -69,7 +71,7 @@ class App(tk.Tk):
         self.ser = LockedSerial(self.port.get())
     
     @detached_callback
-    def disconnect(self):
+    def disconnect(self): 
         self.ser.close()
             
         SerialPortal(self)
